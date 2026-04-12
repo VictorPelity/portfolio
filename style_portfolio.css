@@ -8,7 +8,7 @@
     --accent: #275AE6;
     --accent2: #72B6E6;
     --text: #e2e8f0;
-    --muted: #A5D4E6;
+    --muted: #b7e5f8;
     --mono: 'Space Mono', monospace;
     --sans: 'Sansation', sans-serif;
   }
@@ -174,6 +174,7 @@
     cursor: pointer;
     text-decoration: none;
     transition: border-color 0.2s, color 0.2s;
+    border-radius: 5%;
   }
 
   .btn-secondary:hover {
@@ -449,3 +450,12 @@
   }
   
 
+#whats{
+  background-color: #25D366;
+  color: white;
+}
+
+#whats:hover{
+  background-color: white;
+  color: #25D366;
+}
