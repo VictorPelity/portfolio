@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Victor Pelity — Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #090c10;
+    --surface: #0e1117;
+    --border: #1e2530;
+    --accent: #275AE6;
+    --accent2: #72B6E6;
+    --text: #e2e8f0;
+    --muted: #A5D4E6;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Sansation', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(9,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(52px, 8vw, 100px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+  }
+
+  .h1-line2 { color: var(--muted); }
+
+  .hero-desc {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 14px 28px;
+    background: var(--accent);
+    color: #090c10;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,255,157,0.25);
+  }
+
+  .btn-secondary {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── STATUS ── */
+  .status-bar {
+    position: absolute;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+    padding: 0 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── ABOUT ── */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 100px 48px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 48px;
+  }
+
+  .skill-card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .skill-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .skill-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .skill-bar {
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .skill-fill {
+    height: 100%;
+    background: var(--accent);
+    position: relative;
+  }
+
+  .skill-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .project-card:hover { border-color: var(--accent2); }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-lang {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .project-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .project-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.2s;
+  }
+
+  .project-link:hover { gap: 14px; }
+
+  /* ── CONTACT ── */
+  .contact-box {
+    border: 1px solid var(--border);
+    padding: 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-box::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, var(--accent) 0%, transparent 50%, var(--accent2) 100%);
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  .contact-title {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .contact-sub {
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.7s forwards;
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.2s; }
+  .fade-in:nth-child(3) { animation-delay: 0.35s; }
+  .fade-in:nth-child(4) { animation-delay: 0.5s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── GLOW CURSOR ── */
+  .cursor-glow {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,157,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 998;
+    transition: opacity 0.3s;
+  }
+
+  .section-label{
+    background-color: #0098d3;
+    opacity: 80%;
+    color: white;
+  }
+  
+
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="cursor-glow" id="glow"></div>
+
+<nav>
+  <span class="nav-logo">VP_</span>
+  <ul class="nav-links">
+    <li><a href="#sobre">sobre</a></li>
+    <li><a href="#projetos">projetos</a></li>
+    <li><a href="#contato">contato</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag fade-in">Desenvolvedor Full-Stack em formação</div>
+  <h1 class="fade-in">
+    Victor<br>
+    <span class="h1-line2">Pelity.</span>
+  </h1>
+  <p class="hero-desc fade-in">
+    Construindo interfaces e sistemas com HTML, CSS, JavaScript e C.
+    Focado em projetos reais que resolvem problemas reais.
+  </p>
+  <div class="hero-ctas fade-in">
+    <a href="#projetos" class="btn-primary">Ver projetos</a>
+    <a href="https://github.com/VictorPelity" target="_blank" class="btn-secondary">GitHub →</a>
+  </div>
+
+  <div class="status-bar">
+    <span><span class="status-dot"></span>Disponível para oportunidades</span>
+    <span>São Paulo, Brasil</span>
+  </div>
+</div>
+
+<section id="sobre">
+  <div class="section-label">Sobre mim</div>
+  <p style="font-size:18px; max-width:600px; line-height:1.8; color:var(--muted); margin-bottom: 16px;">
+    Desenvolvedor full-stack em formação, com base sólida em lógica de programação.
+    Gosto de entender como as coisas funcionam por baixo — por isso implemento
+    algoritmos sem depender de bibliotecas prontas.
+  </p>
+  <p style="font-size:18px; max-width:600px; line-height:1.8; color:var(--muted);">
+    Atualmente construindo projetos que conectam front-end com problemas reais,
+    como a <strong style="color:var(--text)">Plataforma de Esportes</strong> — uma solução para
+    quem quer praticar esportes mas não sabe onde encontrar os espaços.
+  </p>
+
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-name">HTML</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">CSS</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">JavaScript</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">C</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">VBA</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">Git & GitHub</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projetos">
+  <div class="section-label">Projetos</div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-lang">C</div>
+      <div class="project-title">Calculadora Científica</div>
+      <p class="project-desc">Calculadora científica via terminal sem uso de <code style="font-family:var(--mono);color:var(--accent);font-size:12px">math.h</code>. Implementa raiz, potência e fatorial com recursividade do zero.</p>
+      <a href="https://github.com/VictorPelity/calculadora_C" target="_blank" class="project-link">Ver repositório →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-lang">VBA / Excel</div>
+      <div class="project-title">PizzaRita</div>
+      <p class="project-desc">Sistema de gerenciamento de pizzaria com CRUD completo via Visual Basic for Applications. Projeto em grupo focado em automação de processos.</p>
+      <a href="https://github.com/VictorPelity/PizzaRita" target="_blank" class="project-link">Ver repositório →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-lang">HTML / CSS</div>
+      <div class="project-title">Hotdog.com</div>
+      <p class="project-desc">Releitura criativa do site "pictureofhotdog.com". Exercício de composição visual e domínio de layout com HTML e CSS puro.</p>
+      <a href="https://github.com/VictorPelity/hotdog.com" target="_blank" class="project-link">Ver repositório →</a>
+    </div>
+
+    <div class="project-card" style="border-style: dashed; opacity: 0.6;">
+      <div class="project-lang">Em construção</div>
+      <div class="project-title">Plataforma de Esportes</div>
+      <p class="project-desc">Plataforma para encontrar locais esportivos por região e modalidade. Resolve o problema de quem quer praticar mas não sabe onde.</p>
+      <span class="project-link" style="cursor:default; color:var(--muted)">Em breve —</span>
+    </div>
+
+  </div>
+</section>
+
+<section id="contato">
+  <div class="section-label">Contato</div>
+  <div class="contact-box">
+    <div class="contact-title">Vamos conversar?</div>
+    <p class="contact-sub">Aberto a projetos, parcerias e oportunidades.</p>
+    <div class="contact-links">
+      <a href="https://linkedin.com/in/victorpelity" target="_blank" class="btn-primary">LinkedIn</a>
+      <a href="https://github.com/VictorPelity" target="_blank" class="btn-secondary">GitHub</a>
+      <a href="https://instagram.com/victorpelity" target="_blank" class="btn-secondary">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Victor Pelity © 2026</span>
+  <span>Feito com HTML & CSS</span>
+</footer>
+
+<script>
+  const glow = document.getElementById('glow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+</script>
+</body>
+</html>
